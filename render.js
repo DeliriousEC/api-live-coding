@@ -1,7 +1,7 @@
 
 export function renderElementsExp(comments) {
 
- const appHtml = `<div class="container">
+  const appHtml = `<div class="container">
   <div class="list-loader">
       <span>Комментарии загружаются...</span>
   </div>
@@ -33,9 +33,9 @@ export function renderElementsExp(comments) {
 </div>
 </div>`
 
-    const commentsHTML = comments.map((element, index) => {
-        const ourDate = new Date(element.date);
-        return `<li class="comment" data-index="${index}">
+  const commentsHTML = comments.map((element, index) => {
+    const ourDate = new Date(element.date);
+    return `<li class="comment" data-index="${index}">
         <div class="comment-header">
           <div>${element.author.name}</div>
           <div>${ourDate.toLocaleString()}</div>
@@ -56,7 +56,7 @@ export function renderElementsExp(comments) {
       </li>`
 
 
-    }).join("");
-    list.innerHTML = commentsHTML;
+  }).join("");
+  list.innerHTML = commentsHTML;
 
 }
