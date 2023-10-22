@@ -32,7 +32,7 @@ function getComment() {
 
 }
 
-buttonElement.disable
+// buttonElement.disable
 
 function postComment() {
   postFetchApi({
