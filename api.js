@@ -11,7 +11,6 @@ export const setToken = (newToken) => {
 
 }
 
-
 const buttonElement = document.getElementById("add-button");
 const nameElement = document.querySelector('.add-form-name');
 const textElement = document.querySelector('.add-form-text');
