@@ -1,9 +1,6 @@
 # Проект "Комментарии"
 
-https://glebkaf.github.io/webdev-dom-homework/
+Приложение с комментариями доступно по адресу:
 
-Верстка для учебного проекта студентов Skypro
+https://deliriousec.github.io/api-live-coding/
 
-## Как разрабатывать
-
-Открой index.html в браузере
