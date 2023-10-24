@@ -1,62 +1,136 @@
-
-export function renderElementsExp(comments) {
-
- const appHtml = `<div class="container">
-  <div class="list-loader">
-      <span>Комментарии загружаются...</span>
-  </div>
-
-  <div class="add-form">
-      <h3>Форма входа</h3>
-      Логин
-      <input minlength="1" maxlength="25" id="login-input" type="text" class="add-form-login" />
-      Пароль
-      <input minlength="1" maxlength="25" id="login-input" type="text" class="add-form-login" />
-      <div class="add-form-row">
-          <br>
-          <button id="login-button" class="add-form-button">Войти</button>
-      </div>
-  </div>
-</div>
-
-<ul id="list" class="comments">
-
-</ul>
-<div class="add-form">
-  <input minlength="1" maxlength="25" id="name-input" type="text" class="add-form-name"
-      placeholder="Введите ваше имя (Больше 2 символов)" />
-  <textarea minlength="1" maxlength="200" id="comment-input" type="textarea" class="add-form-text"
-      placeholder="Введите ваш коментарий (Больше 2 символов)" rows="4"></textarea>
-  <div class="add-form-row">
-      <button id="add-button" class="add-form-button">Написать</button>
-  </div>
-</div>
-</div>`
-
-    const commentsHTML = comments.map((element, index) => {
-        const ourDate = new Date(element.date);
-        return `<li class="comment" data-index="${index}">
-        <div class="comment-header">
-          <div>${element.author.name}</div>
-          <div>${ourDate.toLocaleString()}</div>
-        </div>
-        <div class="comment-body">
-          <div data-index class="comment-text">
-            ${element.text}
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">${element.likes}</span>
-            <button data-index="${index}" class="like-button ${element.islike ? "-active-like" : ""}"></button>
-            
-          </div>
-        </div>
-        <button data-id="${element.id}" class="add-form-button delete-button">Удалить</button>
-      </li>`
+import { getComments } from './main.js';
+import { postElements, showLoadingIndicatorComments, hideAddForm, getToken, autorizatedUser, setToken } from './api.js';
+import { userAutorisation } from './login.js';
 
 
-    }).join("");
-    list.innerHTML = commentsHTML;
+const listElement = document.getElementById("list");
+const nameInputElement = document.getElementById("name-input");
+const commentInputElement = document.getElementById("comment-input");
+const listElements = document.getElementById("list");
+const nameElement = document.querySelector('.add-form-name');
+const textElement = document.querySelector('.add-form-text');
+const buttonElements = document.querySelector('.add-form-button');
+const deleteButtonElement = document.querySelector('.delete-button');
+
+export function renderComments(comments) {
+  const appEl = document.getElementById('app');
+  const list = document.getElementById("list");
+  const commentsHTML = comments.map((element, index) => {
+    return `<li class="comment" data-index="${index}" >
+         <div class="comment-header">
+           <div>${element.name}</div>
+           <div>${element.date}</div>
+         </div>
+         <div class="comment-body">
+           <div class="comment-text">
+             ${element.text}
+           </div>
+         </div>
+         <div class="comment-footer">
+           <div class="likes">
+             <span class="likes-counter">${element.likes}</span>
+             <button data-index="${index}" class="like-button ${element.islike ? "-active-like" : ""}"></button>
+             
+           </div>
+         </div>
+         <button data-index="${index}" class="add-form-button delete-button">Удалить</button>
+       </li>`
+
+  }).join("");
+
+  const authorizationRow = `<p>Для добавления комментария, <a id="login-link" class="add-form-link" href='#'>зарегистрируйтесь</а></p>`
+
+
+  list.innerHTML = commentsHTML;
+  commentOnComment(comments);
+  deleteComment(comments);
+  addLike(comments);
+  getComments();
+};
+
+export function showAuthForm() {
+  const form = document.querySelector(".autorization");
+  form.classList.remove("hidden");
+
+};
+export function hideAuthForm() {
+  const form = document.querySelector(".autorization");
+  form.classList.add("hidden");
+};
+
+function commentOnComment(comments) {
+  const commentInputElement = document.getElementById("comment-input");
+  const commentElements = document.querySelectorAll('.comment');
+  for (let comment of commentElements) {
+    comment.addEventListener('click', () => {
+      let index = comment.dataset.index
+      let object = comments[index];
+      commentInputElement.value = `${object.text}  ${object.name}`
+      renderComments(getComments());
+    })
+
+  }
+}
+
+function deleteComment(comments) {
+  const buttonDelete = document.querySelectorAll('.delete-button');
+  for (let button of buttonDelete) {
+    button.addEventListener('click', (event) => {
+      let index = button.dataset.index
+      comments.splice(index, 1);
+      event.stopPropagation();
+      renderComments(getComments());
+    })
+  }
+
+};
+
+
+export function addComment(comments) {
+  const buttonElement = document.getElementById("add-button");
+  const nameInputElement = document.getElementById("name-input");
+  const commentInputElement = document.getElementById("comment-input");
+  buttonElement.addEventListener('click', () => {
+
+    nameInputElement.classList.remove("error");
+    commentInputElement.classList.remove("error");
+    if (nameInputElement.value === '' || commentInputElement.value === '') {
+      nameInputElement.classList.add("error");
+      commentInputElement.classList.add("error");
+      return;
+    }
+    const nameInComment = nameElement.value
+    const textInComment = textElement.value
+    showLoadingIndicatorComments();
+    hideAddForm();
+
+    postElements({
+      text: textInComment.value,
+      name: nameInComment.value
+    })
+
+  });
+
+}
+
+
+function addLike(comments) {
+
+  const likeElements = document.querySelectorAll('.like-button');
+  for (let like of likeElements) {
+    like.addEventListener('click', (event) => {
+      event.stopPropagation();
+      let index = like.dataset.index
+      let object = comments[index];
+      if (object.islike) {
+        object.islike = false;
+        object.likes--;
+      } else {
+        object.islike = true;
+        object.likes++;
+      }
+      renderComments(getComments());
+    })
+  }
 
 }
