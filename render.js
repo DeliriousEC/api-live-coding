@@ -33,7 +33,6 @@ export function renderComments(comments) {
              
            </div>
          </div>
-         <button data-index="${index}" class="add-form-button delete-button">Удалить</button>
        </li>`
 
   }).join("");
@@ -92,10 +91,10 @@ export function addComment(comments) {
   const commentInputElement = document.getElementById("comment-input");
   buttonElement.addEventListener('click', () => {
 
-    // nameInputElement.classList.remove("error");
+    nameInputElement.classList.remove("error");
     commentInputElement.classList.remove("error");
     if (nameInputElement.value === '' || commentInputElement.value === '') {
-      // nameInputElement.classList.add("error");
+      nameInputElement.classList.add("error");
       commentInputElement.classList.add("error");
       return;
     }

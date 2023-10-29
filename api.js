@@ -77,8 +77,16 @@ export function postElements(text, name) {
       Authorization: token,
     },
     body: JSON.stringify({
-      text: textElement.value,
+      text: textElement.value
+      .replaceAll("<", "&lt")
+        .replaceAll(">", "&gt")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;"),
       name: nameElement.value
+      .replaceAll("<", "&lt")
+        .replaceAll(">", "&gt")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;"),
     })
 
 
@@ -102,12 +110,13 @@ export function postElements(text, name) {
       getFetch();
       deleteLoadingIndicator();
     })
-    .catch((error) => {
+    .catch((error => {
       showAddForm();
       deleteLoadingIndicatorComments();
       buttonElement.disabled = false;
-      alert(error.message);
-    });
+      alert("Нет соединения");
+
+    }));
 
 
 };
