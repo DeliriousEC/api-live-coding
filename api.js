@@ -18,7 +18,7 @@ const listElement = document.getElementById("list");
 
 
 export function getElements() {
-  return fetch("https://wedev-api.sky.pro/api/v2/maxim-trankov3/comments", {
+  return fetch("https://wedev-api.sky.pro/api/v2/maxim-trankov4/comments", {
     method: "GET"
   })
     .then((response) => response.json())
@@ -70,7 +70,7 @@ export function correctDate(date) {
 
 
 export function postElements(text, name) {
-  return fetch('https://wedev-api.sky.pro/api/v2/maxim-trankov3/comments', {
+  return fetch('https://wedev-api.sky.pro/api/v2/maxim-trankov4/comments', {
 
     method: "POST",
     headers: {
