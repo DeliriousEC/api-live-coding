@@ -2,6 +2,8 @@ import { loginUser, autorizatedUser, setToken } from "./api.js";
 import { getFetch } from "./main.js";
 import { renderComments } from "./render.js";
 
+const nameInputElement = document.querySelector('.add-form-name');
+
 let isAutorized = false;
 export function userAutorisation() {
   let isLoginMode = true;
@@ -9,7 +11,7 @@ export function userAutorisation() {
     const loginElement = document.querySelector(".autorization");
     loginElement.innerHTML = `
 <div class="password">
- <h2 class="title"> Форма ${isLoginMode ? 'входа' : 'Регистрации'}</h2>
+ <h2 class="title"> Форма ${isLoginMode ? 'входа' : 'регистрации'}</h2>
  ${isLoginMode ? "" :
         `<input 
  type="text"
@@ -30,7 +32,7 @@ export function userAutorisation() {
         ></textarea>
         <div class="add-form-row">
           <button id="enter-button" class="enter-button " >${isLoginMode ? 'Войти' : 'Зарегистрироваться'}</button>
-          <button id="registration-button" class="enter-button " >Перейти ${isLoginMode ? 'к регистрации' : 'Ко входу'}</button></button>
+          <button id="registration-button" class="enter-button " >Перейти ${isLoginMode ? 'к регистрации' : 'ко входу'}</button></button>
         </div> 
 `
     document.getElementById('enter-button').addEventListener('click', () => {
@@ -84,6 +86,7 @@ export function userAutorisation() {
           login: login,
           password: password,
           name: name
+
         }).then((user) => {
           console.log(user);
           setToken(`Bearer ${user.user.token}`)
@@ -93,7 +96,7 @@ export function userAutorisation() {
         });
       }
     });
-
+   
     document.getElementById('registration-button').addEventListener('click', () => {
       isLoginMode = !isLoginMode;
       renderForm();
