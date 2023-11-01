@@ -93,11 +93,12 @@ export function addComment(comments) {
 
     nameInputElement.classList.remove("error");
     commentInputElement.classList.remove("error");
-    if (nameInputElement.value === '' || commentInputElement.value === '') {
+    if (commentInputElement.value === '') {
       nameInputElement.classList.add("error");
       commentInputElement.classList.add("error");
       return;
     }
+
     const nameInComment = nameElement.value
     const textInComment = textElement.value
     showLoadingIndicatorComments();

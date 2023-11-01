@@ -2,6 +2,8 @@ import { getFetch } from "./main.js";
 import { addComment } from "./render.js";
 import { renderComments } from "./render.js";
 
+import { format } from "date-fns";
+
 let token = null
 export const getToken = () => {
   return token;
@@ -117,7 +119,6 @@ export function postElements(text, name) {
       alert("Нет соединения");
 
     }));
-
 
 };
 
